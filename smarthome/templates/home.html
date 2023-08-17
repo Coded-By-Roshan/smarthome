@@ -1,0 +1,132 @@
+{% load static %}
+
+
+<!doctype html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Customer Dashboard</title>
+  <!-- <link rel="manifest" href="../manifest.json"> -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+</head>
+<style>
+  .container {
+    height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  h1 {
+    text-align: center;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .btn {
+    margin: 1rem;
+  }
+</style>
+
+<body>
+  <nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark border-bottom border-body" data-bs-theme="dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Customer Dashboard</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="speaker"
+    style="display: flex;justify-content: space-between;width: 13rem;box-shadow: 0 0 13px #0000003d;border-radius: 5px;">
+    <p id="action" style="color: grey;font-weight: 800;height: 3rem; padding: 0;height: 3rem;text-align: center; padding-left: 2rem;"></p>
+    <button onclick="runSpeechRecog()" style="border: transparent;padding: 0 0.5rem;">
+       Speak
+    </button>
+  </div>
+  
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+    crossorigin="anonymous"></script>
+<script>
+
+  function getToken(name) {
+     let cookieValue = null;
+     if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+           const cookie = cookies[i].trim();
+           // Does this cookie string begin with the name we want?
+           if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+           }
+        }
+     }
+     return cookieValue;
+  }
+  var csrftoken = getToken('csrftoken');
+  runSpeechRecog = () => {
+    //  document.getElementById("output").innerHTML = "Loading text...";
+   
+     var action = document.getElementById('action');
+     let recognization = new webkitSpeechRecognition();
+     recognization.onstart = () => {
+        action.innerHTML = "Listening...";
+     }
+     recognization.onresult = (e) => {
+        console.log('fd')
+        var transcript = e.results[0][0].transcript;
+       
+        action.innerHTML = "";
+        return_audio(transcript)
+     }
+     recognization.start();
+  }
+
+  async function return_audio(transcript) {
+     var url = '/record';
+     await fetch(url, {
+        method: 'POST',
+        headers: {
+           'Content-Type': 'application/json',
+           'X-CSRFToken': csrftoken,
+        },
+        body: JSON.stringify({ 'audio_data': transcript })
+     })
+        .then((response) => {
+           console.log(response)
+           return response.json()
+        })
+        .then((data) => {
+           console.log('data:', data)
+           var msg = new SpeechSynthesisUtterance();
+           msg.text = data
+           window.speechSynthesis.speak(msg);
+          
+         
+           
+        })
+  }
+
+</script>
+  
+
+
+
+
+</body>
+
+</html>
