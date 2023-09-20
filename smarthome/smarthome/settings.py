@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'customer',
     'seller',
+    'pwa',
+   
     # 'rest_framework'
 ]
 
@@ -53,6 +55,10 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'smarthome.urls'
+
+
+
+
 
 TEMPLATES = [
     {
@@ -103,9 +109,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/2.1/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -115,10 +118,13 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.1/howto/static-files/
+DEFAULT_AUTO_FIELD='django.db.models.AutoField' 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
+        'LOCATION': 'cache:11211',
+    }
+}
 
 
 
@@ -127,6 +133,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [(BASE_DIR,'static')]
 
 
-
 MEDIA_ROOT =(BASE_DIR,'media')
 MEDIA_URL = '/media/'
+
+

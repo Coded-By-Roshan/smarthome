@@ -1,0 +1,20 @@
+{
+    "name": "AccordBox",
+    "short_name": "AccordBox",
+    "description": "Webpack boilerplate for Django & Flask",
+    "dir": "auto",
+    "lang": "en-US",
+    "display": "standalone",
+    "orientation": "any",
+    "start_url": "/?homescreen=1",
+    "background_color": "#fff",
+    "theme_color": "#fff",
+    "icons": [
+      {
+        "src": "static/logo.png",
+        "sizes": "36x36",
+        "type": "image/png"
+      }
+      
+    ]
+  }
